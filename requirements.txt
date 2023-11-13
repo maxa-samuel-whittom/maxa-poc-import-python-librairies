@@ -1,0 +1,2 @@
+sqlfluff==2.3.5
+snowflake-snowpark-python==1.10.0

@@ -1,5 +1,6 @@
 from typing import Any, Dict, Iterator, List, Union
 import snowflake.snowpark as snowpark
+from snowflake.snowpark.session import Session
 from sqlfluff.core import FluffConfig, Linter
 
 #session = snowpark.Session.builder.configs(CONNECTION_PARAMETERS).create()
@@ -15,6 +16,6 @@ config = FluffConfig(
 )
 
 #@udf(packages=["sqlfluff"])
-def lint(sql_query):
+def lint(session: Session, sql_query):
   linted_file = Linter(config=config).lint_string(sql_query)
   return linted_file.get_violations() == []

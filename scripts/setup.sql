@@ -9,19 +9,18 @@ GRANT USAGE ON SCHEMA code_schema TO APPLICATION ROLE app_public;
 
 -- UDFs
 -- pytest, tblib, importlib_resources, etc... are dependencies of sqlfluff
-CREATE or REPLACE FUNCTION code_schema.lint(query string)
-  RETURNS boolean
+CREATE or REPLACE PROCEDURE code_schema.lint(query STRING)
+  RETURNS BOOLEAN
   LANGUAGE PYTHON
-  RUNTIME_VERSION=3.8
+  RUNTIME_VERSION=3.10
   IMPORTS = ('/python/query_validator.py', '/packages/sqlfluff-2.3.5-py3-none-any.zip')
   PACKAGES=('snowflake-snowpark-python', 'pytest', 'tblib', 'importlib_resources', 'appdirs', 'toml', 'tqdm', 'jinja2', 'regex', 'pathspec', 'chardet')
   HANDLER='query_validator.lint';
 
-GRANT USAGE ON FUNCTION code_schema.lint(STRING) TO APPLICATION ROLE app_public;
+GRANT USAGE ON PROCEDURE code_schema.lint(STRING) TO APPLICATION ROLE app_public;
 
 -- Streamlit App
 CREATE STREAMLIT code_schema.test_sqlfluff_streamlit
   FROM '/streamlit'
   MAIN_FILE = '/app.py';
-
 GRANT USAGE ON STREAMLIT code_schema.test_sqlfluff_streamlit TO APPLICATION ROLE app_public;

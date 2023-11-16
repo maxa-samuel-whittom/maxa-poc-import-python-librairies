@@ -1,0 +1,14 @@
+name: myenv
+channels:
+  - snowflake
+dependencies: # I have to import all dependencies of sqlfluff here
+  - pytest
+  - tblib
+  - importlib_resources
+  - appdirs
+  - toml
+  - tqdm
+  - jinja2
+  - regex
+  - pathspec
+  - chardet

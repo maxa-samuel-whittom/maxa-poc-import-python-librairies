@@ -21,6 +21,6 @@ GRANT USAGE ON PROCEDURE code_schema.lint(STRING) TO APPLICATION ROLE app_public
 
 -- Streamlit App
 CREATE STREAMLIT code_schema.test_sqlfluff_streamlit
-  FROM '/streamlit'
+  FROM '/'
   MAIN_FILE = '/app.py';
 GRANT USAGE ON STREAMLIT code_schema.test_sqlfluff_streamlit TO APPLICATION ROLE app_public;

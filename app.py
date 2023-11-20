@@ -13,8 +13,15 @@ def lint_query_in_streamlit(session, query):
     session.custom_package_usage_config = { "enabled": True }
     session.add_requirements("./environment.yml")
     import sys
-    sys.path.append('packages/sqlfluff-2.3.5-py3-none-any.zip')
+    # sqlfluff
+    sys.path.append("packages/sqlfluff-2.3.5-py3-none-any.zip")
     from sqlfluff.core import FluffConfig, Linter
+    # snowflake-sqlalchemy
+    # session.add_import("packages/snowflake_sqlalchemy-1.5.1-py2.py3-none-any.zip") # Does not work
+    sys.path.append("packages/snowflake_sqlalchemy-1.5.1-py2.py3-none-any_2.zip")
+    st.text(sys.path)
+    from snowflake_sqlalchemy.snowdialect import SnowflakeDialect
+
     config = FluffConfig(
         overrides={
             "dialect": "snowflake",

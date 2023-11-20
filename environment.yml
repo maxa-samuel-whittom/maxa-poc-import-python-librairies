@@ -1,7 +1,8 @@
 name: myenv
 channels:
   - snowflake
-dependencies: # I have to import all dependencies of sqlfluff here
+dependencies: 
+  # Dependencies of sqlfluff here
   - pytest
   - tblib
   - importlib_resources
@@ -12,3 +13,5 @@ dependencies: # I have to import all dependencies of sqlfluff here
   - regex
   - pathspec
   - chardet
+  # Dependencies of snowflake-sqlalchemy here
+  - sqlalchemy

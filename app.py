@@ -14,11 +14,11 @@ def lint_query_in_streamlit(session, query):
     session.add_requirements("./environment.yml")
     import sys
     # sqlfluff
-    sys.path.append("packages/sqlfluff-2.3.5-py3-none-any.zip")
+    sys.path.append("packages/sqlfluff.zip")
     from sqlfluff.core import FluffConfig, Linter
     # snowflake-sqlalchemy
     # session.add_import("packages/snowflake_sqlalchemy-1.5.1-py2.py3-none-any.zip") # Does not work
-    sys.path.append("packages/snowflake_sqlalchemy-1.5.1-py2.py3-none-any_2.zip")
+    sys.path.append("packages/snowflake-sqlalchemy.zip")
     st.text(sys.path)
     from snowflake_sqlalchemy.snowdialect import SnowflakeDialect
 
@@ -36,7 +36,6 @@ def lint_query_in_streamlit(session, query):
 session = get_active_session()
 
 st.title("Test SQL Fluff")
-st.text("You may have to click on the buttons more than once, but this seems more like a front-end issue than a functionality one")
 with st.form("my_form"):
     input_val = st.text_input("Query")
     st.form_submit_button(

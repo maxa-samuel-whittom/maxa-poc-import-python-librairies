@@ -9,18 +9,13 @@ In Snowsight, open a new worksheet.
 
 Run the following commands in the worksheet:
 ```
-GRANT CREATE APPLICATION PACKAGE ON ACCOUNT TO ROLE accountadmin;
+USE ROLE apps_admin;
+CREATE OR REPLACE DATABASE test_sqlfluff_db;
+USE DATABASE test_sqlfluff_db;
+CREATE SCHEMA test_sqlfluff_schema;
+USE SCHEMA test_sqlfluff_schema;
 
-CREATE APPLICATION PACKAGE test_sqlfluff_package;
-
-SHOW APPLICATION PACKAGES;
-
-USE APPLICATION PACKAGE test_sqlfluff_package;
-
-CREATE SCHEMA stage_content;
-
-CREATE OR REPLACE STAGE test_sqlfluff_package.stage_content.test_sqlfluff_stage
-  FILE_FORMAT = (TYPE = 'csv' FIELD_DELIMITER = '|' SKIP_HEADER = 1);
+CREATE OR REPLACE STAGE test_sqlfluff_stage DIRECTORY = ( ENABLE = true );
 ```
 
 On your local machine, run the following command to upload the files to your newly-created Snowflake stage:
@@ -30,18 +25,28 @@ snowsql -c CONNECTION_NAME -f upload.sql
 
 Go back to your Snowsight worksheet and run these commands:
 ```
-CREATE APPLICATION test_sqlfluff_APP
-  FROM APPLICATION PACKAGE test_sqlfluff_PACKAGE
-  USING '@test_sqlfluff_package.stage_content.test_sqlfluff_stage';
+DROP APPLICATION PACKAGE IF EXISTS test_sqlfluff_package;
+DROP APPLICATION IF EXISTS test_sqlfluff;
 
+CREATE APPLICATION PACKAGE test_sqlfluff_package;
 USE APPLICATION PACKAGE test_sqlfluff_package;
+
+ALTER APPLICATION PACKAGE test_sqlfluff_package
+  ADD VERSION "v1_0"
+  USING @test_sqlfluff_db.test_sqlfluff_schema.test_sqlfluff_stage;
+
+CREATE APPLICATION IF NOT EXISTS test_sqlfluff
+  FROM APPLICATION PACKAGE test_sqlfluff_package
+  USING VERSION "v1_0";
+
+USE APPLICATION test_sqlfluff;
 ```
 
 You can then test that SQLFluff works by running these commands in the worksheet:
 ```
-SELECT code_schema.lint('SELECT 1 FROM myvalidquery'); -- returns TRUE
+CALL code_schema.lint('SELECT 1 FROM myvalidquery'); -- returns TRUE
 
-SELECT code_schema.lint('SELLECT 1 FROMM myinvalidquery'); -- returns FALSE
+CALL code_schema.lint('SELLECT 1 FROMM myinvalidquery'); -- returns FALSE
 ```
 
 ## About This Solution
